@@ -12,6 +12,7 @@ import {
   waitForReceipt,
 } from './ethereum.js'
 import { formatEther, isAddress, parseEther, shortAddress, txUrl } from './utils.js'
+import './send-eth.css'
 
 const account = ref('')
 const chainId = ref('')
@@ -169,21 +170,3 @@ onBeforeUnmount(() => {
   </div>
 </template>
 
-<style scoped>
-.send-card { max-width: 440px; border: 1px solid #d9dccf; border-radius: 8px; padding: 20px; background: #fffdf7; }
-.wallet-info { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; font-size: 13px; margin-bottom: 16px; }
-.wallet-info .status-dot { margin-right: 0; }
-.balance { margin-left: auto; color: #68726a; }
-.send-form { display: grid; gap: 14px; }
-.send-form label { display: grid; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
-.send-form input { font: inherit; font-size: 14px; letter-spacing: 0; text-transform: none; font-weight: 400; color: #243c34; border: 1px solid #d9dccf; border-radius: 5px; padding: 12px; background: #fff; }
-.send-form input:focus-visible { outline: 3px solid #a74432; outline-offset: 2px; }
-.send-form .wallet-button { justify-self: start; }
-.wallet-button:disabled { opacity: 0.6; cursor: wait; transform: none; }
-.network-warning { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 13px; color: #a74432; }
-.link-button { border: 0; background: none; padding: 0; color: #253e34; text-decoration: underline; cursor: pointer; }
-.send-status { font-size: 13px; line-height: 1.6; margin: 14px 0 0; word-break: break-word; }
-.send-status.failed { color: #a74432; }
-.send-status.success { color: #2f6b4f; }
-.send-status a { text-decoration: underline; margin-left: 4px; }
-</style>
