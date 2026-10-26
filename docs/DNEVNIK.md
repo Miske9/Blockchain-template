@@ -20,7 +20,7 @@
 - Najkorisniji prompt (kopiran u cijelosti):
   Implementiraj gumb „Send ETH” na postojećem frontendu koji omogućuje slanje testnog ETH-a na Sepolia mreži preko MetaMask walleta. Omogući da spojim svoj novčanik i da mogu poslati prijatelju neku količinu koju ja odredim. Napravi mapu u projektnom direktoriju u kojoj spremas datoteke za taj gumb i sve funkcionalnosti vezane uz gumb. Upute su u agents.md
 - Što je AI napravio dobro: Pitao me za potvrdu plana, organizirao kod u zasebnu mapu, pokretanje radi bez greške, testna transakcija je prošla bez problema
-- Što je AI napravio drugačije nego što sam očekivao: nije mi odmah dao lokalnu verziju nego mi je dao neki random github commit na kojem je spremio promjene koje je napravio, sve je stavio u istu datoteku.vue pa sam ja rastavio da css bude u različitoj datoteci
+- Što je AI napravio drugačije nego što sam očekivao: nije mi odmah dao lokalnu verziju nego mi je dao neki random github commit na kojem je spremio promjene koje je napravio, sve je stavio u istu datoteku.vue pa sam ja rastavio da css bude u različitoj datoteci, napravio mi je novi branch na Github a ja to nisam tražio
 - Što sam dodao u AGENTS.md: /
 - Provjera: Pokrenuo sam aplikaciju u web pregledniku Google Chrome i poslao sam prijatelju 0.01 SepoliaETH i provjerio sam sa njim stiglo mu je na wallet.
-- Commit:
+- Commit: 213bd6e
