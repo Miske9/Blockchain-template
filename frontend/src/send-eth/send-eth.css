@@ -1,0 +1,17 @@
+/* Stilovi za Send ETH komponentu (SendEth.vue). Sve je pod .send-eth da ne utjece na ostatak stranice. */
+.send-eth .send-card { max-width: 440px; border: 1px solid #d9dccf; border-radius: 8px; padding: 20px; background: #fffdf7; }
+.send-eth .wallet-info { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; font-size: 13px; margin-bottom: 16px; }
+.send-eth .wallet-info .status-dot { margin-right: 0; }
+.send-eth .balance { margin-left: auto; color: #68726a; }
+.send-eth .send-form { display: grid; gap: 14px; }
+.send-eth .send-form label { display: grid; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+.send-eth .send-form input { font: inherit; font-size: 14px; letter-spacing: 0; text-transform: none; font-weight: 400; color: #243c34; border: 1px solid #d9dccf; border-radius: 5px; padding: 12px; background: #fff; }
+.send-eth .send-form input:focus-visible { outline: 3px solid #a74432; outline-offset: 2px; }
+.send-eth .send-form .wallet-button { justify-self: start; }
+.send-eth .wallet-button:disabled { opacity: 0.6; cursor: wait; transform: none; }
+.send-eth .network-warning { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 13px; color: #a74432; }
+.send-eth .link-button { border: 0; background: none; padding: 0; color: #253e34; text-decoration: underline; cursor: pointer; }
+.send-eth .send-status { font-size: 13px; line-height: 1.6; margin: 14px 0 0; word-break: break-word; }
+.send-eth .send-status.failed { color: #a74432; }
+.send-eth .send-status.success { color: #2f6b4f; }
+.send-eth .send-status a { text-decoration: underline; margin-left: 4px; }

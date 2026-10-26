@@ -1,7 +1,5 @@
 <script setup>
-function spojiNovcanik() {
-  console.log('novcanik')
-}
+import SendEth from './send-eth/SendEth.vue'
 </script>
 
 <template>
@@ -20,15 +18,7 @@ function spojiNovcanik() {
           <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> TRADICIJA U NOVOM RITMU</p>
           <h1 id="hero-title">Jedan instrument.<br />Tisuću <em>priča.</em></h1>
           <p class="intro">Neke melodije ne slušamo samo ušima.<br class="desktop-break" /> Osjetimo ih srcem. Upoznaj harmoniku.</p>
-          <button class="wallet-button" type="button" @click="spojiNovcanik">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M20 8V5a2 2 0 0 0-2-2L5 6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h15V8H5a2 2 0 0 1 0-4" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />
-              <path d="M20 12h-5v5h5M17 14.5h.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-            Spoji Novcanik
-            <svg class="arrow-icon button-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12" stroke="currentColor" stroke-width="1.5" /></svg>
-          </button>
-          <p class="button-note">Tvoja ulaznica u naš glazbeni svijet.</p>
+          <SendEth />
         </div>
 
         <div class="hero-art">
