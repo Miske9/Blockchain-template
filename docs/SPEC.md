@@ -152,6 +152,9 @@ Modul: **Nagradna trgovina** (digitalne note).
 - **K16:** Zadano adresa sa saldom 0 i note koje koštaju 1, kada pokuša kupiti note, tada transakcija pada s porukom "Nedovoljno bodova" i `jeKupio` ostaje false.
 - **K17:** Zadano polaznik ima 0 bodova, kada administrator dodijeli 3, tada je emitiran `Transfer(0x0, polaznik, 3)`; kada polaznik kupi note od 3 boda, emitiran je `Transfer(polaznik, 0x0, 3)`.
 - **K18:** Zadano vlasnik, kada pozove `dodajAdministratora(0x0)`, tada transakcija pada s porukom "Neispravna adresa".
+- **K19:** Zadano ugovor je objavljen, kada se pozovu `name`, `symbol` i `decimals`, tada vraćaju "Harmonika bodovi", "HBOD" i 0.
+- **K20:** Zadano polaznik ima 10 bodova, kada pozove `approve(A, 5)`, tada transakcija pada s porukom "Bodovi nisu prenosivi" i `allowance(polaznik, A)` vraća 0.
+- **K21:** Zadano note koštaju 15, kada administrator promijeni cijenu na 10, tada `dohvatiNote` vraća cijenu 10 i emitiran je `CijenaPromijenjena(id, 15, 10)`.
 
 ## Izvan opsega
 
@@ -171,4 +174,28 @@ Modul: **Nagradna trgovina** (digitalne note).
 
 ## Sljedivost
 
-(popunjava se u Dijelu 4)
+| Funkcija             | Kriteriji                     |
+| -------------------- | ----------------------------- |
+| name                 | K19                           |
+| symbol               | K19                           |
+| decimals             | K19                           |
+| totalSupply          | K6, K11                       |
+| balanceOf            | K1, K6, K7, K8, K11, K12, K16 |
+| allowance            | K20                           |
+| transfer             | K5                            |
+| transferFrom         | K5                            |
+| approve              | K20                           |
+| dodijeliBodove       | K1, K2, K3, K4, K8, K17       |
+| oduzmiBodove         | K6, K7                        |
+| dodajAdministratora  | K8, K9a, K15, K18             |
+| ukloniAdministratora | K9b                           |
+| prenesiVlasnistvo    | K15                           |
+| vlasnik              | K15                           |
+| jeAdministrator      | K8, K9b, K15                  |
+| dodajNote            | K10                           |
+| promijeniCijenu      | K21                           |
+| povuciNote           | K14                           |
+| kupiNote             | K11, K12, K13, K14, K16, K17  |
+| dohvatiNote          | K10, K21                      |
+| jeKupio              | K13, K16                      |
+| brojNota             | K10                           |
