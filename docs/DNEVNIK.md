@@ -69,3 +69,4 @@ Postavljanje: Remix VM, objavljen `HarmonikaUgovor` s Account 1 (vlasnik). Zatim
 | K3       | S Account 2 (administrator) pozvao `dodijeliBodove(<Account 3>, 11)`                                 | Pada: "Iznos mora biti od 1 do 10"                         | Reason provided by the contract: "Iznos mora biti od 1 do 10".                                                                                                        |
 
 Nalazi iz Remixa: "nema odstupanja"
+commit: 508801c
