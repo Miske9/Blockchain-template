@@ -24,3 +24,48 @@
 - Što sam dodao u AGENTS.md: /
 - Provjera: Pokrenuo sam aplikaciju u web pregledniku Google Chrome i poslao sam prijatelju 0.01 SepoliaETH i provjerio sam sa njim stiglo mu je na wallet.
 - Commit: 213bd6e
+
+## T3 - Tokeni (02.11.2026.)
+
+### Recenzija specifikacije (AI kritičar)
+
+| Nalaz                                                                             | Odluka                | Obrazloženje                                                                                                                                                                                     |
+| --------------------------------------------------------------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| N1 – Posjetitelj u matrici smije kupiti note, a u ulogama "može samo čitati"      | prihvaćeno            | Adresa s bodovima je po definiciji polaznik. Ćelija za posjetitelja mijenja se u "ne smije (nema bodova)", a dodan je K16: kupnja sa saldom 0 pada s "Nedovoljno bodova".                        |
+| N2 – Gubitak ključa je istodobno odluka i otvoreno pitanje                        | prihvaćeno            | Odluka ostaje (prijenos unaprijed, inače novi ugovor). Iz Otvorenih pitanja uklanjam to pitanje; ostaje samo kako prenijeti salda u novi ugovor.                                                 |
+| N3 – "Administrator ne može ukloniti vlasnika" testira radnju koja ne postoji     | prihvaćeno            | Pravilo je preformulirano: administrator ne može pozvati ukloniAdministratora ni prenesiVlasnistvo. K9 je razdvojen na K9a i K9b s točnim pozivima.                                              |
+| N5 – Nedostaje ERC-20 događaj Transfer i funkcija allowance                       | prihvaćeno            | Token je ERC-20, novčanici bez Transfer događaja ne vide salda. Kovanje emitira Transfer(0x0, polaznik, iznos), spaljivanje Transfer(polaznik, 0x0, iznos), allowance uvijek vraća 0. Dodan K17. |
+| N9 – dodajAdministratora nema provjeru nulte adrese                               | prihvaćeno            | Nedosljedno s ostalim funkcijama. Dodana poruka "Neispravna adresa" i K18.                                                                                                                       |
+| N19 – Administrator može povisiti cijenu prije kupnje, treba parametar maksCijena | odbijeno              | Administrator je nastavnik tečaja kojemu polaznici vjeruju, a cijene se mijenjaju rijetko. Dodatni parametar komplicira kupnju bez stvarne koristi za mali tečaj.                                |
+| N4 – ograničenje 1–10 zaobilazi se s više poziva                                  | prihvaćeno            | Iz odluke uklonjeno "jedna dodjela = jedna vježba"; dnevni limit ostaje u Otvorenim pitanjima.                                                                                                   |
+| N6/N17 – smije li administrator imati bodove                                      | odbijeno              | Administratori ne kupuju note; zloupotreba se rješava izvan lanca (vlasnik bira nastavnike).                                                                                                     |
+| N7 – stari vlasnik nakon prijenosa ostaje administrator                           | prihvaćeno            | Izričito navedeno: administratorska uloga se ne mijenja prijenosom.                                                                                                                              |
+| N8 – prijenos vlasništva u dva koraka                                             | odbijeno              | Izvan opsega za ovu vježbu.                                                                                                                                                                      |
+| N10 – redoslijed provjera                                                         | prihvaćeno            | Redoslijed: ovlast → adresa → iznos → stanje.                                                                                                                                                    |
+| N12 – ID-ovi nota                                                                 | prihvaćeno            | ID-ovi počinju od 1.                                                                                                                                                                             |
+| N13 – događaj za promjenu cijene                                                  | prihvaćeno            | Dodan CijenaPromijenjena; povlačenje je trajno.                                                                                                                                                  |
+| N14 – oporavak polaznika s izgubljenim ključem                                    | odbijeno              | Izvan opsega; administrator ručno dodijeli bodove na novu adresu.                                                                                                                                |
+| N15 – duplikat naziva                                                             | odbijeno              | Dopušteno, note se razlikuju po ID-u.                                                                                                                                                            |
+| N18 – oduzmiBodove bez traga                                                      | prihvaćeno            | Događaj BodoviOduzeti sadrži adresu administratora.                                                                                                                                              |
+| N20/N31 – isporuka PDF-a                                                          | prihvaćeno            | Dodan procesni zahtjev: PDF se šalje u roku 3 radna dana.                                                                                                                                        |
+| N24–N30 – neprovjerljivi kriteriji                                                | prihvaćeno djelomično | Definirani potpisi događaja, K8 i K15 precizirani.                                                                                                                                               |
+| N11, N16, N21, N22, N23                                                           | odbijeno              | Rubni slučajevi niskog rizika za mali tečaj; ostaju poznata ograničenja.                                                                                                                         |
+
+### Sljedivost ugovora
+
+- Iznad svake funkcije u `contracts/HarmonikaUgovor.sol` dopisana je oznaka kriterija.
+- Nalaz: ugovor iz OpenZeppelin `Ownable` nasljeđuje javne funkcije `transferOwnership` i `renounceOwnership`, koje nemaju kriterij. `transferOwnership` mijenja vlasnika bez provjere "Neispravna adresa" i bez događaja `VlasnistvoPreneseno`, a `renounceOwnership` zauvijek ostavlja ugovor bez vlasnika.
+  - Kriv: kod. Naslijeđene funkcije nisu obrisive, zato su pregažene tako da uvijek padaju s "Koristi prenesiVlasnistvo".
+  - SPEC: dodan K22 (funkcije, matrica ovlasti, kriteriji, sljedivost) i test.
+
+### Provjera u Remixu
+
+Postavljanje: Remix VM, objavljen `HarmonikaUgovor` s Account 1 (vlasnik). Zatim Account 1 pozvao `dodajAdministratora(<Account 2>)`.
+
+| Kriterij | Što sam kliknuo                                                                                      | Očekivano                                                  | Dobiveno (poruka iz konzole)                                                                                                                                          |
+| -------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| K1       | S Account 2 (administrator) pozvao `dodijeliBodove(<Account 3>, 10)`, zatim `balanceOf(<Account 3>)` | Uspjeh, emitiran `BodoviDodijeljeni`, `balanceOf` vraća 10 | Uspjeh, `"event": "BodoviDodijeljeni"`, `"args": { "0": "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2", "1": "0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db", "2": "10" }` |
+| K2       | S Account 4 (nije administrator) pozvao `dodijeliBodove(<Account 3>, 5)`                             | Pada: "Samo administrator"                                 | Reason provided by the contract: "Samo administrator".                                                                                                                |
+| K3       | S Account 2 (administrator) pozvao `dodijeliBodove(<Account 3>, 11)`                                 | Pada: "Iznos mora biti od 1 do 10"                         | Reason provided by the contract: "Iznos mora biti od 1 do 10".                                                                                                        |
+
+Nalazi iz Remixa: "nema odstupanja"
