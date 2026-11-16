@@ -5,18 +5,15 @@ pragma solidity ^0.8.24;
 /// @notice Neprenosivi bodovi za polaznike tečaja harmonike. 0 decimala.
 /// @dev Izvor: docs/SPEC.md. Samostalno sučelje (ne nasljeđuje OpenZeppelin IERC20),
 ///      ali s ERC-20 potpisima radi kompatibilnosti s novčanicima i alatima.
-interface IHarmonikaBodoviToken {
+interface IHarmonikaToken {
     // ─────────────────────────────── Događaji ───────────────────────────────
 
-    /// @notice ERC-20 događaj. Dodjela: Transfer(0x0, polaznik, iznos);
-    ///         oduzimanje i kupnja: Transfer(polaznik, 0x0, iznos).
-    /// SPEC: K17
-    event Transfer(address indexed od, address indexed prema, uint256 iznos);
-
-    /// @notice ERC-20 događaj; deklariran radi sukladnosti sa standardom.
-    /// @dev Nikad se ne emitira jer approve uvijek pada.
-    /// SPEC: nema kriterija
-    event Approval(address indexed vlasnikBodova, address indexed potrosac, uint256 iznos);
+    // ERC-20 događaji Transfer i Approval namjerno nisu deklarirani ovdje:
+    // implementacija ih nasljeđuje iz OpenZeppelin IERC20 (preko ERC20), a
+    // Solidity ne dopušta isti događaj deklariran dvaput u istoj hijerarhiji.
+    // - Transfer(from, to, value): dodjela Transfer(0x0, polaznik, iznos);
+    //   oduzimanje i kupnja Transfer(polaznik, 0x0, iznos). SPEC: K17
+    // - Approval(owner, spender, value): nikad se ne emitira jer approve uvijek pada.
 
     /// SPEC: K1
     event BodoviDodijeljeni(address indexed administrator, address indexed polaznik, uint256 iznos);

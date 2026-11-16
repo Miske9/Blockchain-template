@@ -89,6 +89,11 @@ Modul: **Nagradna trgovina** (digitalne note).
 - Smije: nitko
 - Pada uvijek: "Bodovi nisu prenosivi".
 
+**transferOwnership / renounceOwnership** (naslijeđene iz OpenZeppelin Ownable)
+
+- Smije: nitko
+- Pada uvijek: "Koristi prenesiVlasnistvo". Vlasništvo se mijenja samo kroz prenesiVlasnistvo, koji provjerava adresu i emitira `VlasnistvoPreneseno`; ugovor ne može ostati bez vlasnika.
+
 **balanceOf, totalSupply, allowance (uvijek 0), name, symbol, decimals, dohvatiNote, jeKupio**
 
 - Smije: svi (samo čitanje).
@@ -107,6 +112,7 @@ Modul: **Nagradna trgovina** (digitalne note).
 | povuciNote                        | ne smije\*             | smije                  | ne smije | ne smije               |
 | kupiNote                          | smije (ako ima bodove) | smije (ako ima bodove) | smije    | ne smije (nema bodova) |
 | transfer / transferFrom / approve | ne smije               | ne smije               | ne smije | ne smije               |
+| transferOwnership / renounceOwnership | ne smije           | ne smije               | ne smije | ne smije               |
 | funkcije za čitanje               | smije                  | smije                  | smije    | smije                  |
 
 \* Vlasnik te radnje smije samo ako sam sebe doda kao administratora.
@@ -155,6 +161,7 @@ Modul: **Nagradna trgovina** (digitalne note).
 - **K19:** Zadano ugovor je objavljen, kada se pozovu `name`, `symbol` i `decimals`, tada vraćaju "Harmonika bodovi", "HBOD" i 0.
 - **K20:** Zadano polaznik ima 10 bodova, kada pozove `approve(A, 5)`, tada transakcija pada s porukom "Bodovi nisu prenosivi" i `allowance(polaznik, A)` vraća 0.
 - **K21:** Zadano note koštaju 15, kada administrator promijeni cijenu na 10, tada `dohvatiNote` vraća cijenu 10 i emitiran je `CijenaPromijenjena(id, 15, 10)`.
+- **K22:** Zadano vlasnik V, kada pozove `transferOwnership(W)` ili `renounceOwnership()`, tada transakcija pada s porukom "Koristi prenesiVlasnistvo" i `vlasnik` ostaje V.
 
 ## Izvan opsega
 
@@ -190,6 +197,8 @@ Modul: **Nagradna trgovina** (digitalne note).
 | dodajAdministratora  | K8, K9a, K15, K18             |
 | ukloniAdministratora | K9b                           |
 | prenesiVlasnistvo    | K15                           |
+| transferOwnership    | K22                           |
+| renounceOwnership    | K22                           |
 | vlasnik              | K15                           |
 | jeAdministrator      | K8, K9b, K15                  |
 | dodajNote            | K10                           |
