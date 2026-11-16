@@ -11,16 +11,17 @@ Aplikacija za tečaj harmonike. Polaznici za svaku završenu vježbu dobivaju bo
 | Vlasnik       | Voditelj tečaja; adresa koja je objavila ugovor. Upravlja administratorima i može prenijeti vlasništvo. |
 | Administrator | Nastavnik; dodjeljuje i oduzima bodove, upravlja notama u trgovini.                                     |
 | Polaznik      | Adresa s bodovima; kupuje note.                                                                         |
-| Posjetitelj   | Bilo koja adresa; može samo čitati javne podatke (salda, popis nota).                                   |
+| Posjetitelj   | Adresa bez bodova i bez uloge; može samo čitati javne podatke (salda, popis nota).                      |
 
 ## Odluke o tokenu
 
 - **Naziv, oznaka, decimale:** Harmonika bodovi, HBOD, 0 decimala (1 bod = broj 1).
-- **Izdavanje:** samo administrator, od 1 do 10 bodova po jednoj dodjeli (jedna vježba). Administrator ne može dodijeliti bodove sam sebi.
+- **Izdavanje:** samo administrator, od 1 do 10 bodova po jednom pozivu. Administrator ne može dodijeliti bodove sam sebi.
 - **Ukupna količina:** nema gornje granice, jer se broj polaznika i vježbi ne zna unaprijed.
+- **ERC-20 događaji:** dodjela emitira `Transfer(0x0, polaznik, iznos)`, oduzimanje i kupnja emitiraju `Transfer(polaznik, 0x0, iznos)`; `allowance` uvijek vraća 0.
 - **Prenosivost:** bodovi nisu prenosivi; `transfer`, `transferFrom` i `approve` padaju s porukom "Bodovi nisu prenosivi".
 - **Trošenje:** bodovi se spaljuju kupnjom nota (pokreće polaznik). Administrator može oduzeti (spaliti) bodove polazniku, najviše onoliko koliko polaznik ima.
-- **Administratori:** samo vlasnik dodaje i uklanja administratore. Administrator ne može ukloniti vlasnika ni dodati/ukloniti drugog administratora.
+- **Administratori:** samo vlasnik dodaje i uklanja administratore. Administrator ne može pozvati dodajAdministratora, ukloniAdministratora ni prenesiVlasnistvo. Prijenos vlasništva ne mijenja administratorske uloge.
 - **Gubitak ključa:** vlasnik može unaprijed prenijeti vlasništvo na novu adresu. Ako ključ izgubi bez prijenosa, objavljuje se novi ugovor (vidi Otvorena pitanja).
 
 ## Odluke o modulu
@@ -51,7 +52,7 @@ Modul: **Nagradna trgovina** (digitalne note).
 
 - Smije: vlasnik
 - Radi: dodaje/uklanja ulogu administratora; emitira `AdministratorDodan` / `AdministratorUklonjen`.
-- Pada: nije vlasnik → "Samo vlasnik"; adresa je već administrator → "Vec je administrator"; adresa nije administrator → "Nije administrator".
+- Pada: nije vlasnik → "Samo vlasnik"; nulta adresa → "Neispravna adresa"; adresa je već administrator → "Vec je administrator"; adresa nije administrator → "Nije administrator".
 
 **prenesiVlasnistvo(novaAdresa)**
 
@@ -68,12 +69,13 @@ Modul: **Nagradna trgovina** (digitalne note).
 **promijeniCijenu(idNota, novaCijena)**
 
 - Smije: administrator
+- Radi: mijenja cijenu; emitira `CijenaPromijenjena`.
 - Pada: nije administrator → "Samo administrator"; ne postoje → "Note ne postoje"; cijena = 0 → "Cijena mora biti barem 1".
 
 **povuciNote(idNota)**
 
 - Smije: administrator
-- Radi: note više nisu u prodaji.
+- Radi: note trajno više nisu u prodaji.
 - Pada: nije administrator → "Samo administrator"; ne postoje → "Note ne postoje".
 
 **kupiNote(idNota)**
@@ -87,7 +89,7 @@ Modul: **Nagradna trgovina** (digitalne note).
 - Smije: nitko
 - Pada uvijek: "Bodovi nisu prenosivi".
 
-**balanceOf, totalSupply, name, symbol, decimals, dohvatiNote, jeKupio**
+**balanceOf, totalSupply, allowance (uvijek 0), name, symbol, decimals, dohvatiNote, jeKupio**
 
 - Smije: svi (samo čitanje).
 
@@ -103,7 +105,7 @@ Modul: **Nagradna trgovina** (digitalne note).
 | dodajNote                         | ne smije\*             | smije                  | ne smije | ne smije               |
 | promijeniCijenu                   | ne smije\*             | smije                  | ne smije | ne smije               |
 | povuciNote                        | ne smije\*             | smije                  | ne smije | ne smije               |
-| kupiNote                          | smije (ako ima bodove) | smije (ako ima bodove) | smije    | smije (ako ima bodove) |
+| kupiNote                          | smije (ako ima bodove) | smije (ako ima bodove) | smije    | ne smije (nema bodova) |
 | transfer / transferFrom / approve | ne smije               | ne smije               | ne smije | ne smije               |
 | funkcije za čitanje               | smije                  | smije                  | smije    | smije                  |
 
@@ -116,9 +118,11 @@ Modul: **Nagradna trgovina** (digitalne note).
 - `salda`: mapiranje adresa → broj bodova (uint256)
 - `ukupnaKolicina`: uint256
 - `note`: mapiranje idNota → { nazivPjesme (string), cijena (uint256), uProdaji (bool) }
-- `brojNota`: uint256 (sljedeći ID)
+- `brojNota`: uint256 (ID-ovi počinju od 1)
 - `kupljeno`: mapiranje adresa → idNota → bool
-- Događaji: `BodoviDodijeljeni`, `BodoviOduzeti`, `AdministratorDodan`, `AdministratorUklonjen`, `VlasnistvoPreneseno`, `NoteDodane`, `NoteKupljene`
+- Događaji: `Transfer(od, prema, iznos)`, `BodoviDodijeljeni(administrator, polaznik, iznos)`, `BodoviOduzeti(administrator, polaznik, iznos)`, `AdministratorDodan(adresa)`, `AdministratorUklonjen(adresa)`, `VlasnistvoPreneseno(stari, novi)`, `NoteDodane(id, naziv, cijena)`, `CijenaPromijenjena(id, staraCijena, novaCijena)`, `NoteKupljene(kupac, id, cijena)`
+- Redoslijed provjera u svakoj funkciji: ovlast → adresa → iznos → stanje.
+- Procesni zahtjev (izvan lanca): PDF se šalje e-mailom u roku 3 radna dana od događaja `NoteKupljene`.
 
 ## Što se NE sprema na blockchain
 
@@ -136,14 +140,18 @@ Modul: **Nagradna trgovina** (digitalne note).
 - **K5:** Zadano polaznik ima 10 bodova, kada pokuša poslati 5 bodova drugoj adresi (transfer ili transferFrom), tada transakcija pada s porukom "Bodovi nisu prenosivi".
 - **K6:** Zadano polaznik ima 10 bodova, kada administrator oduzme 4 boda, tada polaznik ima 6 bodova i ukupna količina je manja za 4.
 - **K7:** Zadano polaznik ima 3 boda, kada administrator pokuša oduzeti 5, tada transakcija pada s porukom "Nedovoljno bodova".
-- **K8:** Zadano adresa nije administrator, kada je vlasnik doda kao administratora, tada ta adresa može dodijeliti bodove.
-- **K9:** Zadano administrator, kada pokuša dodati drugog administratora ili ukloniti vlasnika, tada transakcija pada s porukom "Samo vlasnik".
+- **K8:** Zadano adresa A nije administrator, kada vlasnik pozove `dodajAdministratora(A)` i A zatim pozove `dodijeliBodove(P, 5)`, tada je emitiran `AdministratorDodan(A)` i saldo P raste za 5.
+- **K9a:** Zadano administrator A i adresa X koja nije administrator, kada A pozove `dodajAdministratora(X)`, tada transakcija pada s porukom "Samo vlasnik".
+- **K9b:** Zadano vlasnik je sebe dodao kao administratora, kada administrator A pozove `ukloniAdministratora(vlasnik)`, tada transakcija pada s porukom "Samo vlasnik" i vlasnik ostaje administrator.
 - **K10:** Zadano administrator, kada doda note "Oj Dunave" s cijenom 15, tada note postoje, u prodaji su i emitiran je `NoteDodane`.
 - **K11:** Zadano polaznik ima 20 bodova i note koštaju 15, kada kupi note, tada polaznik ima 5 bodova, ukupna količina je manja za 15 i emitiran je `NoteKupljene` s njegovom adresom i ID-om nota.
 - **K12:** Zadano polaznik ima 10 bodova i note koštaju 15, kada pokuša kupiti note, tada transakcija pada s porukom "Nedovoljno bodova".
 - **K13:** Zadano polaznik je već kupio note, kada ih pokuša kupiti ponovno, tada transakcija pada s porukom "Note su vec kupljene".
 - **K14:** Zadano note su povučene iz prodaje, kada ih polaznik pokuša kupiti, tada transakcija pada s porukom "Note nisu u prodaji".
-- **K15:** Zadano vlasnik, kada prenese vlasništvo na novu adresu, tada stara adresa više ne može dodati administratora ("Samo vlasnik"), a nova može.
+- **K15:** Zadano vlasnik V prenese vlasništvo na W, tada je emitiran `VlasnistvoPreneseno(V, W)`, V pri `dodajAdministratora(X)` pada s "Samo vlasnik", a kada W pozove `dodajAdministratora(X)`, X postaje administrator.
+- **K16:** Zadano adresa sa saldom 0 i note koje koštaju 1, kada pokuša kupiti note, tada transakcija pada s porukom "Nedovoljno bodova" i `jeKupio` ostaje false.
+- **K17:** Zadano polaznik ima 0 bodova, kada administrator dodijeli 3, tada je emitiran `Transfer(0x0, polaznik, 3)`; kada polaznik kupi note od 3 boda, emitiran je `Transfer(polaznik, 0x0, 3)`.
+- **K18:** Zadano vlasnik, kada pozove `dodajAdministratora(0x0)`, tada transakcija pada s porukom "Neispravna adresa".
 
 ## Izvan opsega
 
@@ -153,11 +161,13 @@ Modul: **Nagradna trgovina** (digitalne note).
 - Tiskane note i zaliha
 - NFT-ovi, glasanje, skupljanje sredstava
 - Automatsko slanje PDF-a iz ugovora
+- Najveća prihvatljiva cijena pri kupnji (maksCijena)
+- Prijenos vlasništva u dva koraka
 
 ## Otvorena pitanja
 
-- Gubitak ključa vlasnika bez prethodnog prijenosa: treba li drugi oblik oporavka (npr. više vlasnika) ili se prihvaća objava novog ugovora i ponovna dodjela salda?
-- Treba li ograničiti koliko puta dnevno administrator može dodijeliti bodove istom polazniku?
+- Kako prenijeti salda polaznika u novi ugovor ako vlasnik izgubi ključ?
+- Treba li dnevno ograničiti koliko puta dnevno administrator može dodijeliti bodove istom polazniku?
 
 ## Sljedivost
 
