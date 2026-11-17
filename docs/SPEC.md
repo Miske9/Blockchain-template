@@ -181,30 +181,32 @@ Modul: **Nagradna trgovina** (digitalne note).
 
 ## Sljedivost
 
-| Funkcija             | Kriteriji                     |
-| -------------------- | ----------------------------- |
-| name                 | K19                           |
-| symbol               | K19                           |
-| decimals             | K19                           |
-| totalSupply          | K6, K11                       |
-| balanceOf            | K1, K6, K7, K8, K11, K12, K16 |
-| allowance            | K20                           |
-| transfer             | K5                            |
-| transferFrom         | K5                            |
-| approve              | K20                           |
-| dodijeliBodove       | K1, K2, K3, K4, K8, K17       |
-| oduzmiBodove         | K6, K7                        |
-| dodajAdministratora  | K8, K9a, K15, K18             |
-| ukloniAdministratora | K9b                           |
-| prenesiVlasnistvo    | K15                           |
-| transferOwnership    | K22                           |
-| renounceOwnership    | K22                           |
-| vlasnik              | K15                           |
-| jeAdministrator      | K8, K9b, K15                  |
-| dodajNote            | K10                           |
-| promijeniCijenu      | K21                           |
-| povuciNote           | K14                           |
-| kupiNote             | K11, K12, K13, K14, K16, K17  |
-| dohvatiNote          | K10, K21                      |
-| jeKupio              | K13, K16                      |
-| brojNota             | K10                           |
+Testovi: `test/HarmonikaUgovor.test.js`. Svaki kriterij tokena (K1–K9b, K15, K17–K20, K22) ima test; kriteriji modula trgovine (K10–K14, K16, K21 i dio K17 s kupnjom) nemaju test jer ugovor `HarmonikaUgovor` ne implementira modul.
+
+| Funkcija | Kriteriji | Test (kriterij → naziv testa) |
+| --- | --- | --- |
+| name | K19 | K19 → `K19: vracaju 'Harmonika bodovi', 'HBOD' i 0` |
+| symbol | K19 | K19 → `K19: vracaju 'Harmonika bodovi', 'HBOD' i 0` |
+| decimals | K19 | K19 → `K19: vracaju 'Harmonika bodovi', 'HBOD' i 0` |
+| totalSupply | K6, K11 | K6 → `K6: administrator oduzme 4 boda, polaznik ima 6, ukupna kolicina manja za 4`<br>K11 → nema testa (modul trgovine nije implementiran u ugovoru) |
+| balanceOf | K1, K6, K7, K8, K11, K12, K16 | K1 → `K1: administrator dodijeli 10 bodova, polaznik ima 10 i emitiran je BodoviDodijeljeni`<br>K6 → `K6: administrator oduzme 4 boda, polaznik ima 6, ukupna kolicina manja za 4`<br>K7 → `K7: administrator ne moze oduzeti 5 bodova`<br>K8 → `K8: vlasnik doda A za administratora, A dodijeli P 5 bodova`<br>K11 → nema testa (modul trgovine nije implementiran u ugovoru)<br>K12 → nema testa (modul trgovine nije implementiran u ugovoru)<br>K16 → nema testa (modul trgovine nije implementiran u ugovoru) |
+| allowance | K20 | K20 → `K20: approve pada s 'Bodovi nisu prenosivi' i allowance vraca 0` |
+| transfer | K5 | K5 → `K5: transfer i transferFrom padaju s 'Bodovi nisu prenosivi'` |
+| transferFrom | K5 | K5 → `K5: transfer i transferFrom padaju s 'Bodovi nisu prenosivi'` |
+| approve | K20 | K20 → `K20: approve pada s 'Bodovi nisu prenosivi' i allowance vraca 0` |
+| dodijeliBodove | K1, K2, K3, K4, K8, K17 | K1 → `K1: administrator dodijeli 10 bodova, polaznik ima 10 i emitiran je BodoviDodijeljeni`<br>K2 → `K2: adresa koja nije administrator ne moze dodijeliti 5 bodova`<br>K3 → `K3: administrator ne moze dodijeliti 11 bodova`<br>K4 → `K4: administrator ne moze sebi dodijeliti 5 bodova`<br>K8 → `K8: vlasnik doda A za administratora, A dodijeli P 5 bodova`<br>K17 → `K17: dodjela 3 boda emitira Transfer(0x0, polaznik, 3)` |
+| oduzmiBodove | K6, K7 | K6 → `K6: administrator oduzme 4 boda, polaznik ima 6, ukupna kolicina manja za 4`<br>K7 → `K7: administrator ne moze oduzeti 5 bodova` |
+| dodajAdministratora | K8, K9a, K15, K18 | K8 → `K8: vlasnik doda A za administratora, A dodijeli P 5 bodova`<br>K9a → `K9a: administrator ne moze pozvati dodajAdministratora`<br>K15 → `K15: prijenos vlasnistva na W; stari vlasnik gubi ovlast, W dodaje administratora`<br>K18 → `K18: vlasnik ne moze dodati nultu adresu za administratora` |
+| ukloniAdministratora | K9b | K9b → `K9b: administrator ne moze ukloniti vlasnika iz administratora` |
+| prenesiVlasnistvo | K15 | K15 → `K15: prijenos vlasnistva na W; stari vlasnik gubi ovlast, W dodaje administratora` |
+| transferOwnership | K22 | K22 → `K22: transferOwnership i renounceOwnership padaju, vlasnik ostaje V` |
+| renounceOwnership | K22 | K22 → `K22: transferOwnership i renounceOwnership padaju, vlasnik ostaje V` |
+| vlasnik | K15 | K15 → `K15: prijenos vlasnistva na W; stari vlasnik gubi ovlast, W dodaje administratora` |
+| jeAdministrator | K8, K9b, K15 | K8 → `K8: vlasnik doda A za administratora, A dodijeli P 5 bodova`<br>K9b → `K9b: administrator ne moze ukloniti vlasnika iz administratora`<br>K15 → `K15: prijenos vlasnistva na W; stari vlasnik gubi ovlast, W dodaje administratora` |
+| dodajNote | K10 | K10 → nema testa (modul trgovine nije implementiran u ugovoru) |
+| promijeniCijenu | K21 | K21 → nema testa (modul trgovine nije implementiran u ugovoru) |
+| povuciNote | K14 | K14 → nema testa (modul trgovine nije implementiran u ugovoru) |
+| kupiNote | K11, K12, K13, K14, K16, K17 | K11 → nema testa (modul trgovine nije implementiran u ugovoru)<br>K12 → nema testa (modul trgovine nije implementiran u ugovoru)<br>K13 → nema testa (modul trgovine nije implementiran u ugovoru)<br>K14 → nema testa (modul trgovine nije implementiran u ugovoru)<br>K16 → nema testa (modul trgovine nije implementiran u ugovoru)<br>K17 → `K17: dodjela 3 boda emitira Transfer(0x0, polaznik, 3)` (samo dodjela; dio s kupnjom nema testa) |
+| dohvatiNote | K10, K21 | K10 → nema testa (modul trgovine nije implementiran u ugovoru)<br>K21 → nema testa (modul trgovine nije implementiran u ugovoru) |
+| jeKupio | K13, K16 | K13 → nema testa (modul trgovine nije implementiran u ugovoru)<br>K16 → nema testa (modul trgovine nije implementiran u ugovoru) |
+| brojNota | K10 | K10 → nema testa (modul trgovine nije implementiran u ugovoru) |

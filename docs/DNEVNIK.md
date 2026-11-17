@@ -70,3 +70,21 @@ Postavljanje: Remix VM, objavljen `HarmonikaUgovor` s Account 1 (vlasnik). Zatim
 
 Nalazi iz Remixa: "nema odstupanja"
 commit: 508801c
+
+## Vježba 4: testovi
+
+- Prompt:
+  "U docs/SPEC.md su kriteriji prihvaćanja za token (K1, K2, ...), a u
+  contracts/HarmonikaUgovorToken.sol je ugovor.
+  Napiši Hardhat 3 testove u test/HarmonikaUgovor.test.js: JavaScript (ne TypeScript),
+  ESM,
+  mocha + chai, ethers v6, na početku:
+  import { network } from "hardhat"; const { ethers } = await
+  network.connect();
+  Pravila: - jedan it() po kriteriju tokena, naziv počinje oznakom kriterija (npr. "K3:
+  ..."); - za neuspješne kriterije koristi revertedWith s točnom porukom iz ugovora; - za događaje koristi emit(...).withArgs(...); - svaki test sam priprema stanje u beforeEach, bez ovisnosti o drugim
+  testovima; - ne mijenjaj ugovor; ako kriterij nije moguće testirati, napiši to kao
+  komentar."
+- Testova: 49, prolazi: 49
+- Greška AI-ja koju sam uočio: Ovaj put je sve napravio ispravno nakon promptanja, nije radio greske
+- Mutacijska provjera: maknuo sam require "require(msg.sender == owner(), "Samo vlasnik");", pao je test "K9a, K15, K9b"
