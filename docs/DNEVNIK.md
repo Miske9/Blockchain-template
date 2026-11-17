@@ -89,6 +89,8 @@ commit: 508801c
 - Greška AI-ja koju sam uočio: Ovaj put je sve napravio ispravno nakon promptanja, nije radio greske
 - Mutacijska provjera: maknuo sam require "require(msg.sender == owner(), "Samo vlasnik");", pao je test "K9a, K15, K9b"
 
+commit za hardhat projekt: 0e474cd
+
 ## Vježba 4: objava na lokalnoj mreži
 
 - Contract deployment: HarmonikaUgovor
@@ -106,3 +108,5 @@ commit: 508801c
   Druga transakcija zapiše samo jedan podataka (tko je administrator), a objava zapiše cijeli kod ugovora.
 - Što bi se dogodilo s ugovorom da sad ugasim npx hardhat node?
   Ugovor bi nestao, jer je to lokalno i lokalni Hardhat lanac postoji samo dok node radi.
+
+commit: 36ac1be
