@@ -88,3 +88,21 @@ commit: 508801c
 - Testova: 49, prolazi: 49
 - Greška AI-ja koju sam uočio: Ovaj put je sve napravio ispravno nakon promptanja, nije radio greske
 - Mutacijska provjera: maknuo sam require "require(msg.sender == owner(), "Samo vlasnik");", pao je test "K9a, K15, K9b"
+
+## Vježba 4: objava na lokalnoj mreži
+
+- Contract deployment: HarmonikaUgovor
+- Contract address: 0x5fbdb2315678afecb367f032d93f642f64180aa3
+- Transaction: 0xbebef8b2541a5121db21a56e845adb38765a81b8c664aed30fd35d34f7a7deeb
+- From: 0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266
+- Value: 0 ETH
+- Gas used: 1720799 of 1720799
+- Block #1: 0x324627a57fbc02931720ce9e68cc82ea271e25f3e5bfa573cd77dd6eede35f54
+
+- Zašto objava troši gas, a čitanje salda ne?
+  Objava zapisuje ugovor na lanac, a svako pisanje se plaća gas, dok čitanje salda ništa ne mijenja pa je besplatno.
+- Zašto je druga transakcija (postaviAdministratora) potrošila puno manje
+  gasa od objave?
+  Druga transakcija zapiše samo jedan podataka (tko je administrator), a objava zapiše cijeli kod ugovora.
+- Što bi se dogodilo s ugovorom da sad ugasim npx hardhat node?
+  Ugovor bi nestao, jer je to lokalno i lokalni Hardhat lanac postoji samo dok node radi.

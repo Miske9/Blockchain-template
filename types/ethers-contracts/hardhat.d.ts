@@ -10,21 +10,21 @@ import * as Contracts from "./index.js";
 
 declare module "@nomicfoundation/hardhat-ethers/types" {
   interface HardhatEthersHelpers extends HardhatEthersHelpersBase {
-  getContractFactory(name: 'IHarmonikaBodoviModul', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.IHarmonikaBodoviModul__factory>
+  getContractFactory(name: 'HarmonikaUgovor', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.HarmonikaUgovor__factory>
+getContractFactory(name: 'IHarmonikaBodoviModul', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.IHarmonikaBodoviModul__factory>
 getContractFactory(name: 'IHarmonikaToken', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.IHarmonikaToken__factory>
-getContractFactory(name: 'HarmonikaUgovor', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.HarmonikaUgovor__factory>
 
-  getContractAt(name: 'IHarmonikaBodoviModul', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.IHarmonikaBodoviModul>
+  getContractAt(name: 'HarmonikaUgovor', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.HarmonikaUgovor>
+getContractAt(name: 'IHarmonikaBodoviModul', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.IHarmonikaBodoviModul>
 getContractAt(name: 'IHarmonikaToken', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.IHarmonikaToken>
-getContractAt(name: 'HarmonikaUgovor', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.HarmonikaUgovor>
 
-  deployContract(name: 'IHarmonikaBodoviModul', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IHarmonikaBodoviModul>
+  deployContract(name: 'HarmonikaUgovor', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.HarmonikaUgovor>
+deployContract(name: 'IHarmonikaBodoviModul', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IHarmonikaBodoviModul>
 deployContract(name: 'IHarmonikaToken', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IHarmonikaToken>
-deployContract(name: 'HarmonikaUgovor', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.HarmonikaUgovor>
 
-  deployContract(name: 'IHarmonikaBodoviModul', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IHarmonikaBodoviModul>
+  deployContract(name: 'HarmonikaUgovor', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.HarmonikaUgovor>
+deployContract(name: 'IHarmonikaBodoviModul', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IHarmonikaBodoviModul>
 deployContract(name: 'IHarmonikaToken', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IHarmonikaToken>
-deployContract(name: 'HarmonikaUgovor', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.HarmonikaUgovor>
 
     // default types
     getContractFactory(
